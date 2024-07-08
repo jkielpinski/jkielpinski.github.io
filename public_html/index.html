@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Jason Kielpinski</title>
+  <style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+</style>
+  <style type="text/css">html {
+line-height: 1.5;
+font-family: Georgia, serif;
+font-size: 20px;
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 1em;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #4444aa;
+}
+a:visited {
+color: #222288;
+}
+img {
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+font-size: 85%;
+margin: 0;
+background-color: #eee;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+background-color: #1a1a1a;
+border: none;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Jason Kielpinski</h1>
+</header>
+<h2 id="about">About</h2>
+<p>Hello! I do appsec stuff, and also like making/playing games, Russian
+language, and reading fantasy and sci-fi. Contact me at first dot lаst
+аt gmаil.</p>
+<h2 id="security-research">Security research</h2>
+<ul>
+<li><p><a href="posts/predicting-system-dot-random">Predicting .NET’s
+System.Random (Xoshiro256**) output (2024)</a><br />
+Development of a proof of concept exploit for predicting the next output
+from .NET’s System.Random class based on previous random
+outputs.</p></li>
+<li><p><a href="https://blog.includesecurity.com/2023/04/impersonating-local-unity-players-with-udp-spoofing-in-mirror/">Impersonating
+Other Players with UDP Spoofing in Mirror (2023)</a><br />
+Reverse engineering deep dive into Mirror, a multiplayer game
+framework.</p></li>
+<li><p><a href="https://blog.includesecurity.com/2022/09/hacking-unity-games-with-malicious-gameobjects-part-2/">Hacking
+Unity Games with Malicious GameObjects, Part 2 (2022)</a><br />
+Expansion of the part 1 post, with a zero-click exploit variant along
+with alternative attacks.</p></li>
+<li><p><a href="https://web.archive.org/web/20210624033913/https://blog.includesecurity.com/2021/06/hacking-unity-games-malicious-unity-game-objects/">Hacking
+Unity Games With Malicious GameObjects (2021)</a><br />
+Found a novel technique for attacking Unity games that load AssetBundles
+from untrusted sources, ultimately resulting in arbitrary code
+execution.</p></li>
+<li><p><a href="https://web.archive.org/web/20210515212146/https://blog.includesecurity.com/2021/04/dependency-confusion-vulnerabilities-in-unity-game-development/">Dependency
+Confusion Vulnerabilities in Unity Games (2021)</a><br />
+Discussion of how dependency confusion vulnerabilities might affect
+Unity game supply chains.</p></li>
+<li><p><a href="https://blog.includesecurity.com/2021/01/custom-static-analysis-rules-showdown-brakeman-vs-semgrep/">Custom
+Static Analysis Rules in Semgrep vs. Brakeman (2021)</a><br />
+Walking through the process of making static analysis rules for a Rails
+application using two popular tools.</p></li>
+<li><p><a href="https://research.nccgroup.com/2020/02/10/interfaces-d-to-rce/">Interfaces.d
+to RCE (2020)</a><br />
+Found an unauthenticated remote code execution vulnerability in the
+Mozilla WebThings gateway.</p></li>
+<li><p><a href="https://github.com/jkielpinski/vacuum-sec/blob/master/PART1_Security%20in%20a%20Vacuum-%20Hacking%20the%20Neato%20Botvac%20Connected.md">Security
+in a Vacuum: Hacking the Neato Botvac Connected Part 1 (2018)</a><br />
+Talked about tooling/test setup for assessing a WiFi-enabled robot
+vacuum and vulnerabilities found, including remote code execution via
+command injection.</p></li>
+<li><p><a href="https://github.com/jkielpinski/vacuum-sec/blob/master/PART2_Security%20in%20a%20Vacuum-%20Hacking%20the%20Neato%20Botvac%20Connected.md">Security
+in a Vacuum: Hacking the Neato Botvac Connected Part 2 (2018)</a><br />
+Development of a convenient exploit for the remote code execution
+vulnerability discovered in part one, which involved setting up separate
+I/O channels (HTTP log for input, DNS for output).</p></li>
+</ul>
+</body>
+</html>

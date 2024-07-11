@@ -49,6 +49,14 @@ a {
 a:visited {
   color: #222288;
 }
+
+code {
+  font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+  font-size: 85%;
+  margin: 0;
+  background-color: #eee;
+}
+
 img {
   max-width: 100%;
 }
@@ -75,12 +83,6 @@ blockquote {
   border-left: 2px solid #e6e6e6;
   color: #606060;
 }
-code {
-  font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
-  font-size: 85%;
-  margin: 0;
-  background-color: #eee;
-}
 pre {
   margin: 1em 0;
   overflow: auto;
@@ -91,8 +93,9 @@ pre code {
   overflow-wrap: normal;
 }
 .sourceCode {
- background-color: transparent;
+ background-color: #eee;
  overflow: visible;
+ padding: 4px;
 }
 hr {
   background-color: #1a1a1a;

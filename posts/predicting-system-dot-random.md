@@ -8,7 +8,7 @@ keywords: [random number prediction, system.net, system.random, xoshiro, xoshiro
 
 ## Intro
 
-.NET's [`System.Random`]() class, starting from .NET 6.0, uses the Xoshiro256** algorithm. `System.Random` is not intended to be suitable for generating secrets, and some internet research confirmed that the Xoshiro256** algorithm should be reversible. E.g., given some random outputs from `System.Random`, it should be possible to predict future outputs. However, I could not find a proof of concept for *how* to do this.
+.NET's [`System.Random`](https://learn.microsoft.com/en-us/dotnet/api/system.random?view=net-8.0) class, starting from .NET 6.0, uses the Xoshiro256** algorithm. `System.Random` is not intended to be suitable for generating secrets, and some internet research confirmed that the Xoshiro256** algorithm should be reversible. E.g., given some random outputs from `System.Random`, it should be possible to predict future outputs. However, I could not find a proof of concept for *how* to do this.
 
 This would useful for an attacker if `System.Random` is being used to generate something that is supposed to be unguessable. For example, if an application uses `System.Random` to generate a secret key, an attacker could take one secret key and use it to predict all future secret keys. 
 

@@ -4,7 +4,7 @@ title: Jason Kielpinski
 
 ## About
 
-Hello! I do appsec stuff, and also like making/playing games, Russian language, and reading fantasy and sci-fi. Contact me at first dot lаst аt gmаil.
+Hello! I do appsec stuff, and also like making/playing games, Russian language, math and reading fantasy and sci-fi. Contact me at first dot lаst аt gmаil.
 
 ## Security research
 

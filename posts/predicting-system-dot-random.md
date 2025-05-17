@@ -3,7 +3,7 @@ title: Predicting .NET's System.Random (Xoshiro256**) output
 author: Jason Kielpinski
 date: July 8, 2024
 modified: July 12, 2024
-keywords: [random number prediction, system.net, system.random, xoshiro, xoshiro256**]
+keywords: [random number prediction, .NET, system.random, xoshiro, xoshiro256**, C#, rng prediction, cracking random number generator, rng prediction, cracking rng, security, rng, random number generator]
 ---
 
 ## Intro
@@ -12,7 +12,7 @@ keywords: [random number prediction, system.net, system.random, xoshiro, xoshiro
 
 This would useful for an attacker if `System.Random` is being used to generate something that is supposed to be unguessable. For example, if an application uses `System.Random` to generate a secret key, an attacker could take one secret key and use it to predict all future secret keys. 
 
-I've published a proof of concept [SystemDotRandomPredictor](https://github.com/jkielpinski/system-dot-random-predictor) tool that I developed for predicting the next `System.Random` outputs, given previous outputs of `System.Random.NextBytes()`, `NextInt64()`, or `NextDouble()` -- this post will discuss how it works. 
+Since I couldn't find an existing proof of concept, I developed my own. I've published a [system-dot-random-predictor](https://github.com/jkielpinski/system-dot-random-predictor) tool that can predict the next `System.Random` outputs, given previous outputs of `System.Random.NextBytes()`, `NextInt64()`, or `NextDouble()` -- this post will discuss how it works. 
 
 ## Internal state
 
@@ -43,11 +43,11 @@ internal ulong NextUInt64()
 }
 ~~~
 
-From this code snippet we can gather some facts. The state variables change with every invocation, so we have to keep track of which invocation we're referring to. $s_1^n$ refers to `_s1` after $n$ invocations of the RNG. We can say:
+In order to predict the next outputs of the RNG, we need to determine what the values of these state variables are. From this code snippet we can gather some facts that we can use to do that. The state variables change with every invocation, so we have to keep track of which invocation we're referring to. $s_1^n$ refers to `_s1` after $n$ invocations of the RNG. We can say:
 
 * **Fact 1**: $f(n) = RL(5 \cdot s_1^n \pmod {2^{64}}, 7) \cdot 9 \pmod {2^{64}}$
 
-	This is the random number generated, called `result` in the code. Note: the $\pmod {2^{64}}$ here is because we are working with `ulong`s -- any time you multiply or add them, they can overflow. `ulong`s have a max value of $2^{64}$; values past that will wrap around.
+	This is the random number generated, called `result` in the code. Note: the $\pmod {2^{64}}$ here is because we are working with `ulong`s -- any time you multiply or add them, they can overflow. `ulong`s have a max value of $2^{64}$; values past that will wrap around. [Modular arithmetic](https://en.wikipedia.org/wiki/Modular_arithmetic) is a convenient way to express this behavior mathematically.
 
 * **Fact 2**: $s_0^{n+1} = s_0^n \oplus s_3^n \oplus s_1^n$
 * **Fact 3**: $s_1^{n+1} = s_1^n \oplus s_2^n \oplus s_0^n$
@@ -61,14 +61,14 @@ We know the output of the RNG, $f(n)$, and need to solve for the state variables
 
 ### $s_1$
 
-At this point we know only $f(n)$ (the random output), not any of the state variables yet. Take **fact 1** above:
+At this point we know only $f(n)$ for any n (the random outputs), not any of the state variables yet. Take **fact 1** above:
 
 $f(n) = RL(5 \cdot s_1^n \pmod {2^{64}}, 7) \cdot 9 \pmod {2^{64}}$
 
 And solve for $s_1^n$. Note that, because we are working in modular arithmetic, we multiply by the multiplicative modular inverses $5^{-1} \pmod {2^{64}}$ and $9^{-1} \pmod {2^{64}}$ instead of dividing.
 
-* $\Rightarrow f(n) \cdot (9^{-1} \pmod {2^{64}}) = RL(s_1^n \cdot 5, 7)$
-* $\Rightarrow RR(f(n) \cdot (9^{-1} \pmod {2^{64}}), 7) = s_1^n \cdot 5$
+* $\Rightarrow f(n) \cdot (9^{-1} \pmod {2^{64}}) = RL(s_1^n \cdot 5 \pmod {2^{64}}, 7)$
+* $\Rightarrow RR(f(n) \cdot (9^{-1} \pmod {2^{64}}), 7) = s_1^n \cdot 5 \pmod {2^{64}}$
 * $\Rightarrow s_1^n = RR(f(n) \cdot (9^{-1} \pmod {2^{64}}, 7) \cdot (5^{-1} \pmod {2^{64}}$)
 
 These modular inverses can be calculated, e.g. with Wolfram Alpha: $5^{-1} \pmod {2^{64}} =$ [14757395258967641293](https://www.wolframalpha.com/input?i=5%5E-1+mod+2%5E64) and $9^{-1} \pmod {2^{64}} =$ [10248191152060862009](https://www.wolframalpha.com/input?i=9%5E-1+mod+2%5E64)
@@ -76,12 +76,12 @@ These modular inverses can be calculated, e.g. with Wolfram Alpha: $5^{-1} \pmod
 
 ### $s_2$
 
-Now we know $f(n)$ and $s_1^n$ so first take **fact 3** and rearrange so we know everything on the left side:
+Now we know $f(n)$ and $s_1^n$ for any n. So first take **fact 3** and rearrange so we know everything on the left side:
 
 * $s_1^{n+1} = s_1^n \oplus s_2^n \oplus s_0^n$
 * $\Rightarrow s_1^{n+1} \oplus s_1^n = s_2^n \oplus s_0^n$
 
-Note the right hand term is a part of **fact 4**. If we substitute the left hand side for that part of fact 4, we can solve for $s_2^{n+1}$:
+Note the right hand term is a part of **fact 4**. If we substitute the left hand side of the above for that part of fact 4, we can solve for $s_2^{n+1}$:
 
 $s_2^{n+1} = s_1^{n+1} \oplus s_1^n \oplus (s_1^n \gg 17)$
 
@@ -102,7 +102,7 @@ Finally, we know $f(n)$, $s_0^n$, $s_1^n$ and $s_2^n$. Use **fact 2** to find $s
 
 ## Putting it together
 
-The code below uses these values to assemble a full set of state variables for $n = 1$: `s0_1`, `s1_1`, `s2_1`, `s3_1`
+The code below uses the above equations with four outputs from the random number generator to assemble a full set of state variables for $n = 1$: `s0_1`, `s1_1`, `s2_1`, `s3_1`
 
 ~~~csharp
 static ulong S1(ulong randomValue) =>
@@ -139,18 +139,18 @@ void DetermineStateFromRandomUlongs(ulong r0, ulong r1, ulong r2, ulong r3)
 }
 ~~~
 
-From here we can advance the state 3 times to catch up with the RNG state. Then we can just copy over the logic from `System.Random` internals to generate new random numbers that should match the next outputs of the `System.Random` instance whose state we determined, predicting the next values.
+Note that we have four random numbers from the RNG, so as far as the original RNG is concerned, n = 4 (e.g. it has updated the state variables four times as it generated the four random numbers). But we have determined the state variables for n = 1. So we also need to advance the state three times to catch up our state variables with the RNG state by running the original algorithm three times. Then we can just copy over the logic from `System.Random` internals to generate new random numbers that should match the next outputs of the `System.Random` instance whose state we determined, predicting the next values.
 
 Just one obstacle...
 
 ## External outputs
 
-`System.Random` *internally* uses `ulong`. But *external* output is `int`, `byte[]`, `double`, `long`, `float` -- *not* `ulong`. So how can we take one of these external outputs, convert it to an internal output (`ulong`), and then calculate the state?
+`System.Random` *internally* uses `ulong`. But *external* output (returned to the callers who invoke one of the [public methods](https://learn.microsoft.com/en-us/dotnet/api/system.random?view=net-9.0#methods)) is `int`, `byte[]`, `double`, `long`, `float` -- not `ulong`. If we're predicting random numbers, we will only be able to see these external outputs. So how can we take external outputs and convert it to an internal output (`ulong`) so we can calculate the state using the above method?
 
 
 ### Random.NextBytes()
 
-The simplest case is for `byte[]` output. Just take the first four `ulong`s worth of bytes (32 bytes), parse each one as a `ulong`, and use that as the input. Then increment the RNG for any additional data in there, to catch up the state. E.g.
+The simplest case is for `byte[]` output. Internally, `Random.NextBytes()` just generates a bunch of `ulong`s and packs them into an array, so we *do* actually have access to the internal `ulong` outputs in this case. We can just take the first four `ulong`s worth of bytes (32 bytes) from the array returned by `Random.NextBytes()`, parse each one as a `ulong`, and use that as the random outputs to calculate the state. Then we have to increment the RNG for any additional data in there, to catch up the state. E.g.
 
 ~~~csharp
 randombytes = [
@@ -166,7 +166,7 @@ randombytes = [
 
 ### Random.NextInt64()
 
-The next simplest case is for `long`. The logic for generating a `long` (essentially) looks like this (minus a few edge cases):
+The next simplest case is for `long`. The logic for generating a `long` essentially looks like this (minus a few edge cases):
 
 ~~~csharp
 public override long NextInt64()
@@ -178,10 +178,10 @@ public override long NextInt64()
 It right shifts by 1, chopping off 1 bit of information about the original `ulong` random value. So the bits that we know look like:
 
 ~~~csharp
-r0 = 0 1 0 ... 0 ?
-r1 = 1 1 0 ... 1 ?
-r2 = 0 0 0 ... 0 ?
-r3 = 0 1 1 ... 0 ?
+r0 = [ 0, 1, 0, ..., 0, ? ]
+r1 = [ 1, 1, 0, ..., 1, ? ]
+r2 = [ 0, 0, 0, ..., 0, ? ]
+r3 = [ 0, 1, 1, ..., 0, ? ]
 ~~~
 
 Each random value has one mystery bit at the end. There's 16 possible permutations for the 4 unknown bits. The last bits could be: `[0 0 0 0], [0 0 0 1], [0 0 1 0], [0 0 1 1], [0 1 0 0], [0 1 0 1], [0 1 1 0], [0 1 1 1], [1 0 0 0], [1 0 0 1], [1 0 1 0], [1 0 1 1], [1 1 0 0], [1 1 0 1], [1 1 1 0], [1 1 1 1]`
@@ -203,7 +203,7 @@ It chops off 11 bits this time, and does some calculations. We can undo the calc
 var r = ((ulong)randomValue * (1ul << 53)) << 11;
 ~~~
 
-Then... brute force the 44 missing bits again? With multithreading and optimization, my laptop could brute force 44 bits in an estimated 2.75 days. This could be doable in an assessment. Afterwards, you'd need to have the application generate another random number, and increment your state (e.g. generate random numbers) until the predicted output matched the one generated by the application.
+Then... brute force the 44 missing bits again? With multithreading and optimization, my laptop could brute force 44 bits in an estimated 2.75 days. This could be doable in a security assessment where you're looking to prove the exploitability of an insecure random number generation. Afterwards, because time has passed and people have continued to use the application, the state of the application's RNG will likely have advanced while the brute force was occurring. Because of this, you'd need to have the application generate another random number, and increment your predicted state (e.g. generate random numbers) until the predicted output matches the one generated by the application so you know you're caught up.
 
 ### Random.Next()
 

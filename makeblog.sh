@@ -17,3 +17,13 @@ for file in posts/*.md; do
         "post-header.md" \
         "posts/$post.md"
 done
+
+# Generate sitemap
+BASE_URL="https://jkielpinski.github.io"
+
+pushd public_html
+echo "$BASE_URL" > sitemap.txt
+for post in posts/*; do
+    echo "$BASE_URL/$post/" >> sitemap.txt;
+done
+popd

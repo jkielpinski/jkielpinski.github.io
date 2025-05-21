@@ -4,7 +4,7 @@ title: Jason Kielpinski
 
 ## About
 
-Hello! I do appsec stuff, and also like making/playing games, Russian language, math and reading fantasy and sci-fi. Contact me at first dot lаst аt gmаil.
+Hello! Below is some stuff I've worked on. Feel free to contact me at first dot lаst аt gmаil with questions or comments.
 
 ## Security research
 
@@ -26,7 +26,7 @@ Hello! I do appsec stuff, and also like making/playing games, Russian language, 
 * [Custom Static Analysis Rules in Semgrep vs. Brakeman (2021)](https://blog.includesecurity.com/2021/01/custom-static-analysis-rules-showdown-brakeman-vs-semgrep/)  
 	Walking through the process of making static analysis rules for a Rails application using two popular tools.
 
-* [Interfaces.d to RCE (2020)](https://research.nccgroup.com/2020/02/10/interfaces-d-to-rce/)  
+* [Interfaces.d to RCE (2020)](https://web.archive.org/web/20200616114020/https://research.nccgroup.com/2020/02/10/interfaces-d-to-rce/)  
 	Found an unauthenticated remote code execution vulnerability in the Mozilla WebThings gateway.
 
 * [Security in a Vacuum: Hacking the Neato Botvac Connected Part 1 (2018)](https://github.com/jkielpinski/vacuum-sec/blob/master/PART1_Security%20in%20a%20Vacuum-%20Hacking%20the%20Neato%20Botvac%20Connected.md)  

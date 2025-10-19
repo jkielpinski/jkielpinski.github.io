@@ -1,2 +1,3 @@
 https://jkielpinski.github.io
+https://jkielpinski.github.io/posts/parameter-confusion-aspnet-48/
 https://jkielpinski.github.io/posts/predicting-system-dot-random/

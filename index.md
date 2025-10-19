@@ -8,6 +8,9 @@ Hello! Below is some stuff I've worked on. Feel free to contact me at first dot 
 
 ## Security research
 
+* [Parameter confusion in ASP.NET Framework 4.8 (2025)](posts/parameter-confusion-aspnet-48)  
+	Discussion of an unexpected behavior with route parameters in ASP.NET Framework that can lead to security vulnerabilities.
+
 * [Predicting .NET's System.Random (Xoshiro256**) output (2024)](posts/predicting-system-dot-random)  
 	Development of a proof of concept exploit for predicting the next output from .NET's System.Random class based on previous random outputs.
 
